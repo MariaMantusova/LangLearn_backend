@@ -5,7 +5,7 @@ import { Model } from "mongoose";
 import { CreateCardDto } from "./dto/create-card.dto";
 
 @Injectable()
-export class CardService {
+export class CardsService {
   constructor(@InjectModel(Card.name) private cardModel: Model<CardDocument>) {}
 
   async getWords(): Promise<Card[]> {

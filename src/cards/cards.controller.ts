@@ -1,12 +1,12 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post } from "@nestjs/common";
 import { CreateCardDto } from "./dto/create-card.dto";
-import { CardService } from "./card.service";
+import { CardsService } from "./cards.service";
 import { Card } from "./schemes/card.schema";
 
 @Controller('card')
-export class CardController {
+export class CardsController {
 
-  constructor(private cardService: CardService) {}
+  constructor(private cardService: CardsService) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
