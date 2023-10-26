@@ -3,7 +3,7 @@ import { CreateCardDto } from "./dto/create-card.dto";
 import { CardsService } from "./cards.service";
 import { Card } from "./schemes/card.schema";
 
-@Controller('card')
+@Controller('cards')
 export class CardsController {
 
   constructor(private cardService: CardsService) {}
