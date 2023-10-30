@@ -13,9 +13,8 @@ export class UsersService {
     return user.save()
   }
 
-  async getUserByEmail(email: string) {
-    const user = await this.userModel.findOne({where: {email}, include: {all: true}})
-    return user;
+  async getUserByEmail(email: string): Promise<User> {
+    return this.userModel.findOne({ email } );
   }
 
 }
