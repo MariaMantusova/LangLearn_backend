@@ -5,16 +5,21 @@ export type CardDocument = HydratedDocument<Card>;
 
 @Schema()
 export class Card {
-  @Prop()
+  @Prop({required: true, minLength: 1, maxLength: 15, validate: {
+      validator(v) {
+        return /^[A-Za-z\s\-]+$/gm.test(v)
+      },
+      message: 'Введите слово на английском',
+    },})
   word: string
 
-  @Prop()
+  @Prop({required: true, minLength: 1, maxLength: 15})
   translation: string
 
-  @Prop()
+  @Prop({required: true})
   isLearned: boolean
 
-  @Prop()
+  @Prop({required: true})
   userId: string
 }
 

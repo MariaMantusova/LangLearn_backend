@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Card, CardDocument } from "./schemes/card.schema";
 import { Model } from "mongoose";
@@ -15,24 +15,32 @@ export class CardsService {
     return this.cardModel.find({userId}).exec()
   }
 
-  async getWordById(id: string): Promise<Card> {
-    return this.cardModel.findById(id)
-  }
-
   async createWord(cardDto: CreateCardDto): Promise<Card> {
     const newWord = new this.cardModel(cardDto)
     return newWord.save()
   }
 
   async removeWord(id: string): Promise<Card> {
-    return this.cardModel.findByIdAndRemove(id)
+    if (await this.cardModel.findById(id)) {
+      return this.cardModel.findByIdAndRemove(id);
+    }
+
+    throw new NotFoundException({ message: "Карточка не найдена" });
   }
 
   async wordIsLearned(id: string, isLearned: MakeLearnedCardDto): Promise<Card> {
-    return this.cardModel.findByIdAndUpdate(id, isLearned, {new: true})
+    if (await this.cardModel.findById(id)) {
+      return this.cardModel.findByIdAndUpdate(id, isLearned, { new: true });
+    }
+
+    throw new NotFoundException({ message: "Карточка не найдена" });
   }
 
   async changeCard(id: string, card: ChangeWordCardDto | ChangeTranslationCardDto): Promise<Card> {
-    return this.cardModel.findByIdAndUpdate(id, card, {new: true})
+    if (await this.cardModel.findById(id)) {
+      return this.cardModel.findByIdAndUpdate(id, card, {new: true})
+    }
+
+    throw new NotFoundException({ message: "Карточка не найдена" });
   }
 }

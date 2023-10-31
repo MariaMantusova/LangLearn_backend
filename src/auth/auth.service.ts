@@ -21,7 +21,7 @@ export class AuthService {
     const candidate = await this.usersService.getUserByEmail(userDto.email)
 
     if (candidate) {
-      throw new HttpException("Пользователь с таким email существует", HttpStatus.FORBIDDEN)
+      throw new HttpException("Пользователь с таким email существует", HttpStatus.CONFLICT)
     }
 
     const hashPassword = await bcrypt.hash(userDto.password, 5)
