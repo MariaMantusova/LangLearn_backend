@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  Req,
+  UseGuards
+} from "@nestjs/common";
 import { CreateCardDto } from "./dto/create-card.dto";
 import { CardsService } from "./cards.service";
 import { Card } from "./schemes/card.schema";
@@ -7,45 +19,38 @@ import { ChangeWordCardDto } from "./dto/change-word-card.dto";
 import { ChangeTranslationCardDto } from "./dto/change-translation-card.dto";
 import { AuthGuard } from "../auth/auth.guard";
 
-@Controller('cards')
+@Controller("cards")
 export class CardsController {
 
   constructor(private cardService: CardsService) {}
 
-  @Post()
-  @HttpCode(HttpStatus.CREATED)
+  @Get("/my")
+  @UseGuards(AuthGuard)
+  getCardsByUserId(@Req() request) {
+    return this.cardService.getWordsByUserId(request.user._id)
+  }
+
+  @Post("/create")
+  @UseGuards(AuthGuard)
   createCard(@Body() createCardDto: CreateCardDto): Promise<Card> {
     return this.cardService.createWord(createCardDto)
   }
 
-  @Get()
-  getCards() {
-    return this.cardService.getWords()
-  }
-
-  @Get(":id")
-  @UseGuards(AuthGuard)
-  getCardByID(@Param('id') id: string) {
-    return this.cardService.getWordById(id)
-  }
-
   @Delete(":id")
+  @UseGuards(AuthGuard)
   deleteCardByID(@Param('id') id: string) {
     return this.cardService.removeWord(id)
   }
 
   @Patch(":id")
+  @UseGuards(AuthGuard)
   makeCardLearned(@Param('id') id: string, @Body() makeLearnedCardDto: MakeLearnedCardDto): Promise<Card> {
     return this.cardService.wordIsLearned(id, makeLearnedCardDto)
   }
 
   @Patch(":id")
-  changeCardWord(@Param('id') id: string, @Body() changeWordCardDto: ChangeWordCardDto): Promise<Card> {
-    return this.cardService.changeWord(id, changeWordCardDto)
-  }
-
-  @Patch(":id")
-  changeCardTranslation(@Param('id') id: string, @Body() changeTranslationCardDto: ChangeTranslationCardDto): Promise<Card> {
-    return this.cardService.changeTranslation(id, changeTranslationCardDto)
+  @UseGuards(AuthGuard)
+  changeCardWord(@Param('id') id: string, @Body() changeCardDto: ChangeWordCardDto | ChangeTranslationCardDto): Promise<Card> {
+    return this.cardService.changeCard(id, changeCardDto)
   }
 }

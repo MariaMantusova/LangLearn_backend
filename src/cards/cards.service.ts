@@ -11,8 +11,8 @@ import { ChangeTranslationCardDto } from "./dto/change-translation-card.dto";
 export class CardsService {
   constructor(@InjectModel(Card.name) private cardModel: Model<CardDocument>) {}
 
-  async getWords(): Promise<Card[]> {
-    return this.cardModel.find().exec()
+  async getWordsByUserId(userId: string): Promise<Card[]> {
+    return this.cardModel.find({userId}).exec()
   }
 
   async getWordById(id: string): Promise<Card> {
@@ -32,11 +32,7 @@ export class CardsService {
     return this.cardModel.findByIdAndUpdate(id, isLearned, {new: true})
   }
 
-  async changeTranslation(id: string, translation: ChangeTranslationCardDto): Promise<Card> {
-    return this.cardModel.findByIdAndUpdate(id, translation, {new: true})
-  }
-
-  async changeWord(id: string, word: ChangeWordCardDto): Promise<Card> {
-    return this.cardModel.findByIdAndUpdate(id, word, {new: true})
+  async changeCard(id: string, card: ChangeWordCardDto | ChangeTranslationCardDto): Promise<Card> {
+    return this.cardModel.findByIdAndUpdate(id, card, {new: true})
   }
 }

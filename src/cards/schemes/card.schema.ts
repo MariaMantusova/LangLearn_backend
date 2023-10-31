@@ -13,6 +13,9 @@ export class Card {
 
   @Prop()
   isLearned: boolean
+
+  @Prop()
+  userId: string
 }
 
 export const CardSchema = SchemaFactory.createForClass(Card);
