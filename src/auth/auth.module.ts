@@ -12,9 +12,13 @@ import { JwtModule } from '@nestjs/jwt';
     JwtModule.register({
       secret: "secret_key_safasf",
       signOptions: {
-        expiresIn: "24h"
+        expiresIn: "24h",
       }
     })
+  ],
+  exports: [
+    AuthService,
+    JwtModule
   ]
 })
 export class AuthModule {}

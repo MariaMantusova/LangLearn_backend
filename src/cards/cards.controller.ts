@@ -1,10 +1,11 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { CreateCardDto } from "./dto/create-card.dto";
 import { CardsService } from "./cards.service";
 import { Card } from "./schemes/card.schema";
 import { MakeLearnedCardDto } from "./dto/make-learned-card.dto";
 import { ChangeWordCardDto } from "./dto/change-word-card.dto";
 import { ChangeTranslationCardDto } from "./dto/change-translation-card.dto";
+import { AuthGuard } from "../auth/auth.guard";
 
 @Controller('cards')
 export class CardsController {
@@ -23,6 +24,7 @@ export class CardsController {
   }
 
   @Get(":id")
+  @UseGuards(AuthGuard)
   getCardByID(@Param('id') id: string) {
     return this.cardService.getWordById(id)
   }
