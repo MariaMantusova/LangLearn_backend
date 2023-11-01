@@ -13,7 +13,7 @@ export class User {
     },})
   name: string
 
-  @Prop({required: true, validate: {
+  @Prop({required: true, unique: true, validate: {
       validator(v) {
         return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/gm.test(v)
       },
@@ -21,12 +21,7 @@ export class User {
     },})
   email: string
 
-  @Prop({required: true, minLength: 8, validate: {
-      validator(v) {
-        return /^[A-Za-z\d]+$/gm.test(v)
-      },
-      message: 'Введите корректный пароль',
-    },})
+  @Prop({required: true, minLength: 8})
   password: string
 }
 

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Card, CardDocument } from "./schemes/card.schema";
 import { Model } from "mongoose";
@@ -20,25 +20,43 @@ export class CardsService {
     return newWord.save()
   }
 
-  async removeWord(id: string): Promise<Card> {
-    if (await this.cardModel.findById(id)) {
-      return this.cardModel.findByIdAndRemove(id);
+  async removeWord(id: string, userId: string): Promise<Card> {
+    const card = await this.cardModel.findById(id);
+
+    if (card) {
+      if (card.userId === userId) {
+        return this.cardModel.findByIdAndRemove(id);
+      } else {
+        throw new HttpException("Вы не можете удалять чужие карточки", HttpStatus.FORBIDDEN);
+      }
     }
 
     throw new NotFoundException({ message: "Карточка не найдена" });
   }
 
-  async wordIsLearned(id: string, isLearned: MakeLearnedCardDto): Promise<Card> {
-    if (await this.cardModel.findById(id)) {
-      return this.cardModel.findByIdAndUpdate(id, isLearned, { new: true });
+  async wordIsLearned(id: string, isLearned: MakeLearnedCardDto, userId): Promise<Card> {
+    const card = await this.cardModel.findById(id);
+
+    if (card) {
+      if (card.userId === userId) {
+        return this.cardModel.findByIdAndUpdate(id, isLearned, { new: true });
+      } else {
+        throw new HttpException("Вы не можете отмечать выполненными чужие карточки", HttpStatus.FORBIDDEN);
+      }
     }
 
     throw new NotFoundException({ message: "Карточка не найдена" });
   }
 
-  async changeCard(id: string, card: ChangeWordCardDto | ChangeTranslationCardDto): Promise<Card> {
-    if (await this.cardModel.findById(id)) {
-      return this.cardModel.findByIdAndUpdate(id, card, {new: true})
+  async changeCard(id: string, card: ChangeWordCardDto | ChangeTranslationCardDto, userId): Promise<Card> {
+    const cardById = await this.cardModel.findById(id);
+
+    if (cardById) {
+      if (cardById.userId === userId) {
+        return this.cardModel.findByIdAndUpdate(id, card, {new: true})
+      } else {
+        throw new HttpException("Вы не можете исправлять чужие карточки", HttpStatus.FORBIDDEN);
+      }
     }
 
     throw new NotFoundException({ message: "Карточка не найдена" });

@@ -36,19 +36,19 @@ export class CardsController {
 
   @Delete(":id")
   @UseGuards(AuthGuard)
-  deleteCardByID(@Param('id') id: string) {
-    return this.cardService.removeWord(id)
+  deleteCardByID(@Param('id') id: string, @Req() request) {
+    return this.cardService.removeWord(id, request.user._id)
   }
 
   @Patch(":id")
   @UseGuards(AuthGuard)
-  makeCardLearned(@Param('id') id: string, @Body() makeLearnedCardDto: MakeLearnedCardDto): Promise<Card> {
-    return this.cardService.wordIsLearned(id, makeLearnedCardDto)
+  makeCardLearned(@Param('id') id: string, @Body() makeLearnedCardDto: MakeLearnedCardDto, @Req() request): Promise<Card> {
+    return this.cardService.wordIsLearned(id, makeLearnedCardDto, request.user._id)
   }
 
   @Patch(":id")
   @UseGuards(AuthGuard)
-  changeCardWord(@Param('id') id: string, @Body() changeCardDto: ChangeWordCardDto | ChangeTranslationCardDto): Promise<Card> {
-    return this.cardService.changeCard(id, changeCardDto)
+  changeCardWord(@Param('id') id: string, @Body() changeCardDto: ChangeWordCardDto | ChangeTranslationCardDto, @Req() request): Promise<Card> {
+    return this.cardService.changeCard(id, changeCardDto, request.user._id)
   }
 }
