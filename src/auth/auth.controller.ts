@@ -18,7 +18,11 @@ export class AuthController {
   }
 
   @Post("/registration")
-  registration(@Body() userDto: CreateUserDto) {
-    return this.authService.createUser(userDto)
+  async registration(@Body() userDto: CreateUserDto, @Res({ passthrough: true }) res: Response) {
+    let jwt = await this.authService.createUser(userDto)
+    res.cookie("auth-token", jwt.token, { httpOnly: true, secure: false });
+    return {
+      message: "Пользователь успешно зарегестрирован"
+    };
   }
 }
