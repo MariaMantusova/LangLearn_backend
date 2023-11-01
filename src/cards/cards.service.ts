@@ -31,7 +31,7 @@ export class CardsService {
         e.errors.word.properties.message :
         e.errors.translation ?
           e.errors.translation.properties.message : e
-      throw new HttpException(errorMessage, HttpStatus.FORBIDDEN)
+      throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST)
     }
   }
 

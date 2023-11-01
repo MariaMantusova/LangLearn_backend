@@ -19,7 +19,7 @@ export class UsersService {
           e.errors.email.properties.message :
           e.errors.password ?
             e.errors.password.properties.message : e
-      throw new HttpException(errorMessage, HttpStatus.FORBIDDEN)
+      throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST)
     }
   }
 
