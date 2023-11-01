@@ -2,10 +2,10 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Card, CardDocument } from "./schemes/card.schema";
 import { Model } from "mongoose";
-import { CreateCardDto } from "./dto/create-card.dto";
 import { MakeLearnedCardDto } from "./dto/make-learned-card.dto";
 import { ChangeWordCardDto } from "./dto/change-word-card.dto";
 import { ChangeTranslationCardDto } from "./dto/change-translation-card.dto";
+import { CreateCardDtoWithUser } from "./dto/create-card-with-user.dto";
 
 @Injectable()
 export class CardsService {
@@ -15,7 +15,7 @@ export class CardsService {
     return this.cardModel.find({userId}).exec()
   }
 
-  async createWord(cardDto: CreateCardDto): Promise<Card> {
+  async createWord(cardDto: CreateCardDtoWithUser): Promise<Card> {
     const newWord = new this.cardModel(cardDto)
     return newWord.save()
   }

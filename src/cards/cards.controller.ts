@@ -30,8 +30,8 @@ export class CardsController {
 
   @Post("/create")
   @UseGuards(AuthGuard)
-  createCard(@Body() createCardDto: CreateCardDto): Promise<Card> {
-    return this.cardService.createWord(createCardDto)
+  createCard(@Body() createCardDto: CreateCardDto, @Req() request): Promise<Card> {
+    return this.cardService.createWord({ ...createCardDto, userId: request.user._id })
   }
 
   @Delete(":id")

@@ -13,10 +13,15 @@ export class Card {
     },})
   word: string
 
-  @Prop({required: true, minLength: 1, maxLength: 15})
+  @Prop({required: true, minLength: 1, maxLength: 15, validate: {
+      validator(v) {
+        return /^[А-Яа-яЁё\s\-]+$/gm.test(v)
+      },
+      message: 'Введите перевод слова на русском',
+    },})
   translation: string
 
-  @Prop({required: true})
+  @Prop({required: true, default: false })
   isLearned: boolean
 
   @Prop({required: true})
