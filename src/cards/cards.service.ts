@@ -30,7 +30,7 @@ export class CardsService {
       const errorMessage = e.errors.word ?
         e.errors.word.properties.message :
         e.errors.translation ?
-          e.errors.translation.properties.message : "Ошибка валидации"
+          e.errors.translation.properties.message : e
       throw new HttpException(errorMessage, HttpStatus.FORBIDDEN)
     }
   }

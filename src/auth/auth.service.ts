@@ -13,15 +13,15 @@ export class AuthService {
               private jwtService: JwtService) {}
 
   async login(userDto: CreateUserDto) {
-    const user = await this.validateUser(userDto)
-    return await this.generateToken(user)
+    const user = await this.validateUser(userDto);
+    return await this.generateToken(user);
   }
 
   async createUser(userDto: CreateUserDto) {
-    const candidate = await this.usersService.getUserByEmail(userDto.email)
+    const candidate = await this.usersService.getUserByEmail(userDto.email);
 
     if (candidate) {
-      throw new HttpException("Пользователь с таким email существует", HttpStatus.CONFLICT)
+      throw new HttpException("Пользователь с таким email существует", HttpStatus.CONFLICT);
     }
 
     const hashPassword = await bcrypt.hash(userDto.password, 5)
@@ -39,12 +39,17 @@ export class AuthService {
 
   private async validateUser(userDto: CreateUserDto) {
     const user = await this.usersService.getUserByEmail(userDto.email)
+
+    if (!user) {
+      throw new UnauthorizedException({message: "Некорректный email и(или) пароль"})
+    }
+
     const passwordEquals = await bcrypt.compare(userDto.password, user.password)
 
     if (user && passwordEquals) {
       return user;
     }
 
-    return new UnauthorizedException({message: "Некорректный email и(или) пароль"})
+    throw new UnauthorizedException({message: "Некорректный email и(или) пароль"})
   }
 }
