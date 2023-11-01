@@ -1,4 +1,11 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import {
+  HttpCode,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException
+} from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Card, CardDocument } from "./schemes/card.schema";
 import { Model } from "mongoose";
@@ -16,8 +23,16 @@ export class CardsService {
   }
 
   async createWord(cardDto: CreateCardDtoWithUser): Promise<Card> {
-    const newWord = new this.cardModel(cardDto)
-    return newWord.save()
+    try {
+      const newWord = new this.cardModel(cardDto)
+      return await newWord.save()
+    } catch (e) {
+      const errorMessage = e.errors.word ?
+        e.errors.word.properties.message :
+        e.errors.translation ?
+          e.errors.translation.properties.message : "Ошибка валидации"
+      throw new HttpException(errorMessage, HttpStatus.FORBIDDEN)
+    }
   }
 
   async removeWord(id: string, userId: string): Promise<Card> {
