@@ -9,7 +9,7 @@ export async function bootstrap() {
   app.use(helmet());
   app.use(cookieParser());
 
-  await app.listen(5019);
+  await app.listen(3000);
 }
 
 bootstrap();
