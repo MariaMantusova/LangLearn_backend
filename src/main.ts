@@ -6,7 +6,6 @@ import { AppModule } from "./app.module";
 export async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // @ts-ignore
   app.use(cookieParser());
   app.use(helmet());
 
