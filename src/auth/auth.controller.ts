@@ -13,6 +13,7 @@ export class AuthController {
     let jwt = await this.authService.login(userDto)
     res.cookie("auth-token", jwt.token, { httpOnly: true, secure: false });
     return {
+      userName: userDto.name,
       message: "Авторизация прошла успешно"
     };
   }
@@ -22,6 +23,7 @@ export class AuthController {
     let jwt = await this.authService.createUser(userDto)
     res.cookie("auth-token", jwt.token, { httpOnly: true, secure: false });
     return {
+      userName: userDto.name,
       message: "Пользователь успешно зарегестрирован"
     };
   }
