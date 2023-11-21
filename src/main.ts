@@ -4,7 +4,7 @@ import { AppModule } from "./app.module";
 const cookieParser = require('cookie-parser')
 
 export async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
 
   app.use(cookieParser())
   app.use(helmet());
