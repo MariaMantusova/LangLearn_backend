@@ -11,7 +11,7 @@ export class AuthController {
   @Post("/login")
   async login(@Body() userDto: CreateUserDto, @Res({ passthrough: true }) res: Response) {
     let jwt = await this.authService.login(userDto)
-    res.cookie("auth-token", jwt.token, { httpOnly: true, secure: false });
+    res.cookie("auth-token", jwt.token, { httpOnly: true, secure: true, sameSite: "none" });
     return {
       userName: userDto.name,
       message: "Авторизация прошла успешно"
@@ -21,7 +21,7 @@ export class AuthController {
   @Post("/registration")
   async registration(@Body() userDto: CreateUserDto, @Res({ passthrough: true }) res: Response) {
     let jwt = await this.authService.createUser(userDto)
-    res.cookie("auth-token", jwt.token, { httpOnly: true, secure: false });
+    res.cookie("auth-token", jwt.token, { httpOnly: true, secure: false, sameSite: "none" });
     return {
       userName: userDto.name,
       message: "Пользователь успешно зарегестрирован"

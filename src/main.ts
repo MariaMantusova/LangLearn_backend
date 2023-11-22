@@ -14,10 +14,8 @@ export async function bootstrap() {
 
     res.header("Access-Control-Allow-Origin", origin);
     res.header("Access-Control-Allow-Credentials", "true");
-    console.log("I'm in app use")
 
     if (method === "OPTIONS") {
-      console.log("I'm in options")
       res.header("Access-Control-Allow-Methods", DEFAULT_ALLOWED_METHODS);
       res.header("Access-Control-Allow-Headers", requestHeaders);
       return res.end();
