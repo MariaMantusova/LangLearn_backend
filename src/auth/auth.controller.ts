@@ -10,8 +10,10 @@ export class AuthController {
 
   @Post("/login")
   async login(@Body() userDto: CreateUserDto, @Res({ passthrough: true }) res: Response) {
+    const currentDate = new Date()
+    currentDate.setTime(currentDate.getDate() + (2*24*60*60*1000));
     let jwt = await this.authService.login(userDto)
-    res.cookie("auth-token", jwt.token, { httpOnly: true, secure: true, sameSite: "none" });
+    res.cookie("auth-token", jwt.token, { httpOnly: true, secure: true, sameSite: "none", expires: currentDate});
     res.cookie("username", userDto.name, { httpOnly: true, secure: true, sameSite: "none" });
     return {
       message: "Авторизация прошла успешно"
@@ -20,8 +22,10 @@ export class AuthController {
 
   @Post("/registration")
   async registration(@Body() userDto: CreateUserDto, @Res({ passthrough: true }) res: Response) {
+    const currentDate = new Date()
+    currentDate.setTime(currentDate.getDate() + (2*24*60*60*1000));
     let jwt = await this.authService.createUser(userDto)
-    res.cookie("auth-token", jwt.token, { httpOnly: true, secure: true, sameSite: "none" });
+    res.cookie("auth-token", jwt.token, { httpOnly: true, secure: true, sameSite: "none", expires: currentDate });
     res.cookie("username", userDto.name, { httpOnly: true, secure: true, sameSite: "none" });
     return {
       message: "Пользователь успешно зарегестрирован"
