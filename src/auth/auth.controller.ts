@@ -13,8 +13,8 @@ export class AuthController {
     let expiryDate = new Date();
     expiryDate.setMonth(expiryDate.getMonth() + 1);
     let jwt = await this.authService.login(userDto)
-    res.cookie("auth-token", jwt.token, { httpOnly: true, secure: true, sameSite: "none", expires: expiryDate });
-    res.cookie("username", userDto.name, { httpOnly: true, secure: true, sameSite: "none", expires: expiryDate });
+    res.cookie("auth-token", jwt.token, { httpOnly: true, secure: true, sameSite: "none", expires: expiryDate, domain: "localhost" });
+    res.cookie("username", userDto.name, { httpOnly: true, secure: true, sameSite: "none", expires: expiryDate, domain: "localhost" });
     return {
       message: "Авторизация прошла успешно"
     };
@@ -25,8 +25,8 @@ export class AuthController {
     let expiryDate = new Date();
     expiryDate.setMonth(expiryDate.getMonth() + 1);
     let jwt = await this.authService.createUser(userDto)
-    res.cookie("auth-token", jwt.token, { httpOnly: true, secure: true, sameSite: "none", expires: expiryDate });
-    res.cookie("username", userDto.name, { httpOnly: true, secure: true, sameSite: "none", expires: expiryDate });
+    res.cookie("auth-token", jwt.token, { httpOnly: true, secure: true, sameSite: "none", expires: expiryDate, domain: "localhost" });
+    res.cookie("username", userDto.name, { httpOnly: true, secure: true, sameSite: "none", expires: expiryDate, domain: "localhost" });
     return {
       message: "Пользователь успешно зарегестрирован"
     };
