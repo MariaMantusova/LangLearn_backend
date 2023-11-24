@@ -11,36 +11,28 @@ export class AuthController {
 
   @Post("/login")
   async login(@Body() userDto: LoginUserDto, @Res({ passthrough: true }) res: Response) {
-    try {
-      let expiryDate = new Date();
-      expiryDate.setMonth(expiryDate.getMonth() + 1);
-      let jwt = await this.authService.login(userDto)
-      let userName = await this.authService.findUserName(userDto)
-      res.cookie("auth-token", jwt.token, { httpOnly: true, secure: true, sameSite: "none", expires: expiryDate });
-      return {
-        success: true,
-        userName: userName,
-        message: "Авторизация прошла успешно"
-      };
-    } catch (e) {
-      return { message: e }
-    }
+    let expiryDate = new Date();
+    expiryDate.setMonth(expiryDate.getMonth() + 1);
+    let jwt = await this.authService.login(userDto);
+    let userName = await this.authService.findUserName(userDto);
+    res.cookie("auth-token", jwt.token, { httpOnly: true, secure: true, sameSite: "none", expires: expiryDate });
+    return {
+      success: true,
+      userName: userName,
+      message: "Авторизация прошла успешно"
+    };
   }
 
   @Post("/registration")
   async registration(@Body() userDto: CreateUserDto, @Res({ passthrough: true }) res: Response) {
-    try {
-      let expiryDate = new Date();
-      expiryDate.setMonth(expiryDate.getMonth() + 1);
-      let jwt = await this.authService.createUser(userDto)
-      res.cookie("auth-token", jwt.token, { httpOnly: true, secure: true, sameSite: "none", expires: expiryDate });
-      return {
-        success: true,
-        userName: userDto.name,
-        message: "Пользователь успешно зарегестрирован"
-      };
-    } catch (e) {
-      return { message: e }
-    }
+    let expiryDate = new Date();
+    expiryDate.setMonth(expiryDate.getMonth() + 1);
+    let jwt = await this.authService.createUser(userDto);
+    res.cookie("auth-token", jwt.token, { httpOnly: true, secure: true, sameSite: "none", expires: expiryDate });
+    return {
+      success: true,
+      userName: userDto.name,
+      message: "Пользователь успешно зарегестрирован"
+    };
   }
 }
