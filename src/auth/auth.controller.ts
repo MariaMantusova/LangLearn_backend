@@ -2,6 +2,7 @@ import { Body, Controller, Post, Res } from "@nestjs/common";
 import { Response } from "express";
 import { CreateUserDto } from "../users/dto/create-user.dto";
 import { AuthService } from "./auth.service";
+import { LoginUserDto } from "../users/dto/login-user.dto";
 
 @Controller('auth')
 export class AuthController {
@@ -9,12 +10,13 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post("/login")
-  async login(@Body() userDto: CreateUserDto, @Res({ passthrough: true }) res: Response) {
+  async login(@Body() userDto: LoginUserDto, @Res({ passthrough: true }) res: Response) {
     let expiryDate = new Date();
     expiryDate.setMonth(expiryDate.getMonth() + 1);
     let jwt = await this.authService.login(userDto)
+    let userName = await this.authService.findUserName(userDto)
     res.cookie("auth-token", jwt.token, { httpOnly: true, secure: true, sameSite: "none", expires: expiryDate });
-    res.cookie("username", userDto.name, { httpOnly: true, secure: true, sameSite: "none", expires: expiryDate });
+    res.cookie("username", userName,{ httpOnly: true, secure: true, sameSite: "none", expires: expiryDate });
     return {
       message: "Авторизация прошла успешно"
     };
