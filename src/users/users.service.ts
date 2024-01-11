@@ -27,4 +27,7 @@ export class UsersService {
     return this.userModel.findOne({ email } );
   }
 
+  async getCurrentUser(id: string): Promise<User> {
+    return this.userModel.findById(id)
+  }
 }

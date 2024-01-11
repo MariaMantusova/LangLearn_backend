@@ -1,8 +1,9 @@
-import { Body, Controller, Post, Res } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req, Res, UseGuards } from "@nestjs/common";
 import { Response } from "express";
 import { CreateUserDto } from "../users/dto/create-user.dto";
 import { AuthService } from "./auth.service";
 import { LoginUserDto } from "../users/dto/login-user.dto";
+import { AuthGuard } from "./auth.guard";
 
 @Controller('auth')
 export class AuthController {
@@ -34,5 +35,11 @@ export class AuthController {
       message: "Пользователь успешно зарегестрирован",
       token: jwt.token
     };
+  }
+
+  @Get("/me")
+  @UseGuards(AuthGuard)
+  getCurrentUser(@Req() request) {
+    return this.authService.getCurrentUser(request.user._id)
   }
 }

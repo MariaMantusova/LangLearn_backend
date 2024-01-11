@@ -59,4 +59,9 @@ export class AuthService {
 
     throw new UnauthorizedException({message: "Некорректный email и(или) пароль"})
   }
+
+  async getCurrentUser(id: string): Promise<User | any> {
+    const user = await this.usersService.getCurrentUser(id)
+    return {email: user.email, name: user.name, _id: id}
+  }
 }
