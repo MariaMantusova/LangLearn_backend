@@ -1,10 +1,8 @@
 import {
-  HttpCode,
   HttpException,
   HttpStatus,
   Injectable,
   NotFoundException,
-  UnauthorizedException
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Card, CardDocument } from "./schemes/card.schema";
@@ -18,8 +16,20 @@ import { CreateCardDtoWithUser } from "./dto/create-card-with-user.dto";
 export class CardsService {
   constructor(@InjectModel(Card.name) private cardModel: Model<CardDocument>) {}
 
-  async getWordsByUserId(userId: string): Promise<Card[]> {
-    return this.cardModel.find({userId}).exec()
+  async getWordsByUserId(userId: string, wordsType: string): Promise<Card[]> {
+    switch (wordsType) {
+      case "all":
+        return await this.cardModel.find({ userId }).exec();
+        break;
+      case "learned":
+        return (await this.cardModel.find({ userId }).exec())
+          .filter((card) => card.isLearned);
+        break;
+      case "new":
+        return (await this.cardModel.find({ userId }).exec())
+          .filter((card) => !card.isLearned);
+        break;
+    }
   }
 
   async createWord(cardDto: CreateCardDtoWithUser): Promise<Card> {

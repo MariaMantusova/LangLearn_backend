@@ -22,10 +22,10 @@ export class CardsController {
 
   constructor(private cardService: CardsService) {}
 
-  @Get("/my")
+  @Get("/my/:type")
   @UseGuards(AuthGuard)
-  getCardsByUserId(@Req() request) {
-    return this.cardService.getWordsByUserId(request.user._id)
+  getCardsByUserId(@Param('type') type: string, @Req() request) {
+    return this.cardService.getWordsByUserId(request.user._id, type)
   }
 
   @Post("/create")
